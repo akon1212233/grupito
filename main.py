@@ -1,4 +1,4 @@
-from class1 import ubicacion,usuario,animal,proceso
+from resource import ubicacion,usuario,animal,proceso
 
 
 
