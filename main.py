@@ -1,4 +1,4 @@
-from resource import ubicacion,usuario,animal,proceso
+from  import ubicacion,usuario,animal,proceso
 
 
 
