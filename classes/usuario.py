@@ -66,6 +66,36 @@ class Usuarios:
         cursor.close()
         conexion.close()
 
+    @staticmethod
+    def mostrarActvivos():
+
+        conexion = Conexion.conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+
+            select
+                    username
+                    nombre
+                    tipoUsuario
+            from usuarios
+            where deleted = 0
+            order by usuarios ASC;
+        
+        """
+
+        cursor.execute(sql)
+        usuarios = cursor.fetchall()
+        print("\n===== Usuarios =====\n")
+        for usuario in usuarios:
+            print(
+                f"ID: {usuario[0]} | "
+                f"Nombre: {usuario[1]} | "
+                f"Curso: {usuario[2]}"
+            )
+
+        cursor.close()
+        conexion.close()
         
 
 
