@@ -46,8 +46,8 @@ class Ubicaciones:
         cursor.close()
         conexion.close()
 
-
+        @staticmethod
         def mostrarUbicacion():
-            
+            pass
 
 
