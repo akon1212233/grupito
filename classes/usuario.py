@@ -75,12 +75,17 @@ class Usuarios:
         sql = """
 
             select
-                    username
-                    nombre
-                    tipoUsuario
-            from usuarios
-            where deleted = 0
-            order by usuarios ASC;
+                    u.username,
+                    p.nombre,
+                    t.id_tipo_usuario,
+                    t.nombre_tipo_usuario
+            from usuarios u
+            inner join tipo_usuarios t 
+            on u.id_tipo_usuario = t.id_tipo_usuario
+            inner join personas p
+            on u.id_persona = p.id_persona
+            where u.deleted = 0 and t.deleted = 0 and p.deleted = 0;
+            
         
         """
 
@@ -91,7 +96,8 @@ class Usuarios:
             print(
                 f"Username: {usuario[0]} | "
                 f"Nombre: {usuario[1]} | "
-                f"Rol: {usuario[2]}"
+                f"Rol: {usuario[2]} |" 
+                f"Nombre del Rol {usuario[3]}"
             )
 
         cursor.close()

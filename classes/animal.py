@@ -26,8 +26,46 @@ class Animales:
                         )
                         values 
                         (
+                                %s,
+                                %s,
+                                %s,
+                                %s,
                                 %s
                         )
+                
+                """
+
+                valores = (
+                        self.raza,
+                        self.dueño,
+                        self.edad,
+                        self.nombreAnimal,
+                        self.genero
+                )
+
+                cursor.execute(sql, valores)
+
+                cursor.commit()
+                print("\nAnimal añadido\n")
+                cursor.close()
+                conexion.close()
+        
+        @staticmethod
+        def verAnimal():
+
+                conexion = Conexion.conexion()
+                cursor = conexion.cursor()
+
+                sql = """
+
+                        select 
+                                raza, 
+                                nombreAnima,
+                                edad,
+                                dueño
+                        
+                        from 
+
                 
                 """
 
