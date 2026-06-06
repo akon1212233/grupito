@@ -3,8 +3,8 @@ from conexion import Conexion
 
 
 class Ubicaciones:
-    def __init__(self, region, comuna, calle, numero):
-        self.region = region
+    def __init__(self, departamento, comuna, calle, numero):
+        self.departamento = departamento
         self.comuna = comuna
         self.calle = calle
         self.numero = numero
@@ -16,12 +16,12 @@ class Ubicaciones:
         cursor = conexion.cursor()
 
         sql = """
-            insert into
+            insert into direciones
             (
-                region
-                comuna
-                calle
-                numero
+                id_comuna,
+                calle,
+                numero,
+                departamento
             )
             values (
                 %s,
@@ -32,7 +32,7 @@ class Ubicaciones:
             """
         
         valores = (
-            self.region,
+            self.departamento,
             self.comuna,
             self.calle,
             self.numero
