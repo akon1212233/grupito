@@ -89,9 +89,9 @@ class Usuarios:
         print("\n===== Usuarios =====\n")
         for usuario in usuarios:
             print(
-                f"ID: {usuario[0]} | "
+                f"Username: {usuario[0]} | "
                 f"Nombre: {usuario[1]} | "
-                f"Curso: {usuario[2]}"
+                f"Rol: {usuario[2]}"
             )
 
         cursor.close()

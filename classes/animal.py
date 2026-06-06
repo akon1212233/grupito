@@ -2,19 +2,37 @@ from conexion import Conexion
 from usuario import Usuarios
 # CRUD
 class Animales:
-    def __init__(self, raza:str, dueño:Usuarios, edad:int, nombreAnimal:str, genero:str):
-        self.raza = raza
-        self.dueño = dueño
-        self.edad = edad 
-        self.nombreAnimal = nombreAnimal
-        self.genero = genero
+        def __init__(self, raza:str, dueño:Usuarios, edad:int, nombreAnimal:str, genero:str):
+                self.raza = raza
+                self.dueño = dueño
+                self.edad = edad 
+                self.nombreAnimal = nombreAnimal
+                self.genero = genero
 #Aca va las tablas tipo,raza,genero animal,mascotas
 
-    
-        ingresarDueño = 
+        def anadirAnimal(self):
 
-#   conexion = Conexion.conectar()
-#    cursor = conexion.cursor()
+                conexion = Conexion.conexion()
+                cursor = conexion.cursor()
+
+                sql = """
+                        insert into
+                        (
+                                raza,
+                                dueño,
+                                edad,
+                                nombreAnimal,
+                                genero
+                        )
+                        values 
+                        (
+                                %s
+                        )
+                
+                """
+
+
+
 
 
 
