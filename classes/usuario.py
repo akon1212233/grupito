@@ -3,8 +3,9 @@ from ubicacion import Ubicaciones
 # CRUD
 class Usuarios:
 
-    def __init__(self, tipoUsuario:int,username,nombre,email,contraseña,rut,telefono,nacimiento,ubicacion:Ubicaciones):
+    def __init__(self, tipoUsuario:int,username,nombre,apellido,email,contraseña,rut,telefono,nacimiento,ubicacion:Ubicaciones):
         self.nombre = nombre
+        self.apellido = apellido
         self.email = email
         self.contraseña = contraseña
         self.rut = rut
@@ -20,18 +21,14 @@ class Usuarios:
         conexion = Conexion.conexion()
         cursor = conexion.cursor()
 
-        sql = """
-            insert into
+        sql_persona = """
+            insert into personas
             ( 
-                tipoUsuario, 
-                username, 
-                nombre, 
-                email, 
-                contraseña, 
-                rut, 
+                RUT,
+                nombre,
+                apellido,  
                 telefono, 
-                nacimiento, 
-                ubicacion_id
+                fecha_nacimiento 
             )
 
             values 
@@ -40,29 +37,50 @@ class Usuarios:
                 %s,
                 %s,
                 %s,
-                %s,
-                %s,
-                %s,
-                %s,
                 %s
             )
             """
         valores = (
-            self.tipoUsuario,
-            self.username,
-            self.nombre,
-            self.email,
-            self.contraseña,
             self.rut,
+            self.nombre,
+            self.apellido,
             self.telefono,
-            self.nacimiento,
-            self.ubicacion
+            self.nacimiento
         )
 
-        cursor.execute(sql, valores)
 
-        cursor.commit()
-        print("\nUsuario ingresado\n")
+        id_persona_generado = cursor.lastrowid # recupera el id_persona que se esta auto_incrementando
+
+        sql_usuario = """
+
+            insert into usuario
+            (
+                username,
+                id_persona,
+                id_tipo_usuario
+            )
+
+            values 
+            (
+                %s
+                %s
+                %s
+            )
+            
+            """
+
+        valores_usuarios = (
+            self.username,
+            id_persona_generado,
+            self.tipoUsuario
+        )
+
+        cursor.execute(sql_persona, valores)
+        cursor.execute(sql_usuario, valores_usuarios)
+
+
+        conexion.commit()
+        print("\nUsuario y persona ingresado correctamente!\n")
         cursor.close()
         conexion.close()
 
