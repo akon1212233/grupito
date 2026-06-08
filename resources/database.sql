@@ -387,11 +387,11 @@ INSERT INTO direcciones (calle, numero, departamento, id_comuna) VALUES
 ('Av. Providencia', '890', NULL, 3),
 ('Calle 1 Sur', '321', 'Depto 5', 4);
 
-INSERT INTO personas (RUT, nombre, apellido, email, telefono, fecha_nacimiento) VALUES
-('20245645-4', 'Daniel', 'Carranza', 'daniel.carranza@email.com', '+56 9 5678 2345', '2000-04-08'),
-('22245645-4', 'Benjamin', 'Cortinez', 'benjamin.cortinez@email.com', '+56 9 5674 2335', '2001-06-06'),
-('21245645-4', 'Akon', 'Bustamante', 'akon.bustamante@email.com', '+56 9 5678 2355', '2004-05-02'),
-('19245645-4', 'Martin', 'Correa', 'martin.correa@email.com', '+56 9 4678 2345', '2000-08-05');
+INSERT INTO personas (RUT, nombre, apellido, telefono, fecha_nacimiento) VALUES
+('20245645-4', 'Daniel', 'Carranza', '+56 9 5678 2345', '2000-04-08'),
+('22245645-4', 'Benjamin', 'Cortinez', '+56 9 5674 2335', '2001-06-06'),
+('21245645-4', 'Akon', 'Bustamante', '+56 9 5678 2355', '2004-05-02'),
+('19245645-4', 'Martin', 'Correa', '+56 9 4678 2345', '2000-08-05');
 
 INSERT INTO empleados (id_persona, id_direccion, cargo) VALUES
 (1, 2, 'Veterinario Jefe'),
@@ -407,11 +407,11 @@ INSERT INTO tipos_usuarios (nombre_tipo) VALUES
 ('Adoptante');
 
 -- MEJORA PARA PRUEBAS: Contraseñas en texto plano (ej: '123456')
-INSERT INTO usuarios (username, password_hash, id_persona, id_tipo_usuario) VALUES
-('daniel.carranza', '123456', 1, 1),
-('benjamin.cortinez', '123456', 2, 2),
-('akon.bustamante', '123456', 3, 3),
-('martin.correa', '123456', 4, 3);
+INSERT INTO usuarios (username, password_hash, email, id_persona, id_tipo_usuario) VALUES
+('daniel.carranza', 'daniel.carranza@email.com','123456', 1, 1),
+('benjamin.cortinez', 'benjamin.cortinez@email.com', '123456', 2, 2),
+('akon.bustamante', 'akon.bustamante@email.com', '123456', 3, 3),
+('martin.correa', 'martin.correa@email.com', '123456', 4, 3);
 
 INSERT INTO tipos_estados (nombre_tipo, descripcion_tipo) VALUES
 ('Solicitud', 'Estados relacionados al proceso de solicitud de adopción'),

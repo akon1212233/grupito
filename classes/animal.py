@@ -1,11 +1,12 @@
 from conexion import Conexion
 from classes.usuario import Usuarios
+from datetime import date
 
 class Animales:
-    def __init__(self, raza: str, dueño: Usuarios, edad: int, nombreAnimal: str, genero: str):
+    def __init__(self, raza: int, dueño: int, fechaNacimiento: str, nombreAnimal: str, genero: str):
         self.raza = raza
         self.dueño = dueño
-        self.edad = edad
+        self.fechaNacimiento = fechaNacimiento
         self.nombreAnimal = nombreAnimal
         self.genero = genero
 
@@ -13,23 +14,29 @@ class Animales:
         conexion = Conexion.conexion()
         cursor = conexion.cursor()
 
+        generos = {"Macho": 1, "Hembra": 2}
+        id_genero = generos.get(self.genero)
+
+        nacimiento = date.fromisoformat(self.fechaNacimiento)
+        hoy = date.today()
+        edad = hoy.year - nacimiento.year - ((hoy.month, hoy.day) < (nacimiento.month, nacimiento.day))
+
         sql = """
-            INSERT INTO mascotas (nombre_mascota, id_raza, id_sexo_mascota, id_usuario)
-            SELECT %s,
-                (SELECT id_raza FROM razas WHERE nombre_raza = %s),
-                (SELECT id_sexo_mascota FROM sexos_mascotas WHERE tipo_sexo_mascota = %s),
-                %s
+            INSERT INTO mascotas (nombre_mascota, edad, fecha_nacimiento, id_raza, id_sexo_mascota, id_usuario)
+            VALUES (%s, %s, %s, %s, %s, %s)
         """
         valores = (
             self.nombreAnimal,
+            edad,
+            self.fechaNacimiento,
             self.raza,
-            self.genero,
+            id_genero,
             self.dueño
         )
 
         cursor.execute(sql, valores)
         conexion.commit()
-        print("\nAnimal añadido\n")
+        print(f"\nAnimal añadido con {edad} año(s) de edad\n")
 
         cursor.close()
         conexion.close()
@@ -42,6 +49,7 @@ class Animales:
         sql = """
             SELECT
                 m.nombre_mascota,
+                m.edad,
                 r.nombre_raza,
                 s.tipo_sexo_mascota,
                 p.nombre,
@@ -61,11 +69,12 @@ class Animales:
 
         print("\n===== Animales Registrados =====\n")
         for animal in animales:
-            dueño = f"{animal[3]} {animal[4]}" if animal[3] else "Sin adoptante"
+            dueño = f"{animal[4]} {animal[5]}" if animal[4] else "Sin adoptante"
             print(
                 f"Nombre: {animal[0]} | "
-                f"Raza: {animal[1]} | "
-                f"Sexo: {animal[2]} | "
+                f"Edad: {animal[1]} año(s) | "
+                f"Raza: {animal[2]} | "
+                f"Sexo: {animal[3]} | "
                 f"Adoptante: {dueño}"
             )
 
