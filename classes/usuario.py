@@ -114,10 +114,10 @@ class Usuarios:
         opcion = input("Seleccione una opción: ")
 
         opciones = {
-            "1": ("nombre",   "personas"),
-            "2": ("apellido", "personas"),
-            "3": ("telefono", "personas"),
-            "4": ("email",    "usuarios"),
+            "1": ("nombre",    "personas"),
+            "2": ("apellido",  "personas"),
+            "3": ("telefono",  "personas"),
+            "4": ("email",     "usuarios"),
         }
 
         if opcion not in opciones:
@@ -127,24 +127,41 @@ class Usuarios:
         campo, tabla = opciones[opcion]
         nuevo_valor = input(f"Ingrese el nuevo {campo}: ").strip()
 
-        if not nuevo_valor:
-            print("El valor no puede estar vacío.")
-            return
-
-        setattr(self, campo, nuevo_valor)
+        if campo == "nombre":
+            self.nombre = nuevo_valor
+        elif campo == "apellido":
+            self.apellido = nuevo_valor
+        elif campo == "telefono":
+            self.telefono = nuevo_valor
+        elif campo == "email":
+            self.email = nuevo_valor
 
         conexion = Conexion.conexion()
         cursor = conexion.cursor()
 
         sql = f"UPDATE {tabla} SET {campo} = %s WHERE id_persona = %s"
         cursor.execute(sql, (nuevo_valor, id_persona))
-
         conexion.commit()
         print(f"\n{campo.capitalize()} actualizado correctamente.")
 
         cursor.close()
         conexion.close()
 
+    def eliminar(self):
+        id_usuario = input("Ingrese ID del usuario: ")
+        conexion = Conexion.conexion()
+        cursor = conexion.cursor()
 
-    def eliminarUsuario():
-        pass
+        sql = """
+        UPDATE usuarios
+        SET deleted = 1
+        WHERE id_usuario = %s
+        """
+
+        cursor.execute(sql, (id_usuario,))
+        conexion.commit()
+
+        print("\nUsuario eliminado correctamente.")
+
+        cursor.close()
+        conexion.close()
