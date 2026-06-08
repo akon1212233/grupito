@@ -1,9 +1,11 @@
 from conexion import Conexion
 from ubicacion import Ubicaciones
-# CRUD
+
 class Usuarios:
 
-    def __init__(self, tipoUsuario:int,username,nombre,apellido,email,contraseña,rut,telefono,nacimiento,ubicacion:Ubicaciones):
+    def __init__(self, tipoUsuario: int, username: str, nombre: str, apellido: str, 
+                 email: str, contraseña: str, rut: str, telefono: str, nacimiento: str, 
+                 ubicacion: Ubicaciones = None):
         self.nombre = nombre
         self.apellido = apellido
         self.email = email
@@ -14,115 +16,86 @@ class Usuarios:
         self.username = username
         self.tipoUsuario = tipoUsuario
         self.ubicacion = ubicacion
-#Aca va las tablas personas,empleados,adoptantes,tipoUsuario,usuario
 
     def ingresarUsuario(self):
-        
         conexion = Conexion.conexion()
         cursor = conexion.cursor()
 
         sql_persona = """
-            insert into personas
-            ( 
-                RUT,
-                nombre,
-                apellido,  
-                telefono, 
-                fecha_nacimiento 
-            )
-
-            values 
-            (
-                %s,
-                %s,
-                %s,
-                %s,
-                %s
-            )
-            """
-        valores = (
+            INSERT INTO personas (RUT, nombre, apellido, email, telefono, fecha_nacimiento)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        valores_persona = (
             self.rut,
             self.nombre,
             self.apellido,
+            self.email,
             self.telefono,
             self.nacimiento
         )
 
-
-        id_persona_generado = cursor.lastrowid # recupera el id_persona que se esta auto_incrementando
+        cursor.execute(sql_persona, valores_persona)
+        
+        id_persona_generado = cursor.lastrowid
 
         sql_usuario = """
-
-            insert into usuario
+            INSERT INTO usuarios 
             (
-                username,
-                id_persona,
+                username, 
+                password_hash, 
+                id_persona, 
                 id_tipo_usuario
             )
-
-            values 
+            VALUES 
             (
-                %s
-                %s
+                %s, 
+                %s, 
+                %s, 
                 %s
             )
-            
-            """
-
-        valores_usuarios = (
+        """
+        valores_usuario = (
             self.username,
+            self.contraseña,
             id_persona_generado,
             self.tipoUsuario
         )
 
-        cursor.execute(sql_persona, valores)
-        cursor.execute(sql_usuario, valores_usuarios)
-
+        cursor.execute(sql_usuario, valores_usuario)
 
         conexion.commit()
         print("\nUsuario y persona ingresado correctamente!\n")
+        
         cursor.close()
         conexion.close()
 
     @staticmethod
-    def mostrarActvivos():
-
+    def mostrarActivos():
         conexion = Conexion.conexion()
         cursor = conexion.cursor()
 
         sql = """
-
-            select
-                    u.username,
-                    p.nombre,
-                    t.id_tipo_usuario,
-                    t.nombre_tipo_usuario
-            from usuarios u
-            inner join tipo_usuarios t 
-            on u.id_tipo_usuario = t.id_tipo_usuario
-            inner join personas p
-            on u.id_persona = p.id_persona
-            where u.deleted = 0 and t.deleted = 0 and p.deleted = 0;
-            
-        
+            SELECT 
+                u.username,
+                p.nombre,
+                p.apellido,
+                t.nombre_tipo
+            FROM usuarios u
+            INNER JOIN tipos_usuarios t ON u.id_tipo_usuario = t.id_tipo_usuario
+            INNER JOIN personas p ON u.id_persona = p.id_persona
+            WHERE u.deleted = 0 AND t.deleted = 0 AND p.deleted = 0;
         """
 
         cursor.execute(sql)
         usuarios = cursor.fetchall()
-        print("\n===== Usuarios =====\n")
+        
+        print("\n===== Usuarios Activos =====\n")
         for usuario in usuarios:
             print(
                 f"Username: {usuario[0]} | "
-                f"Nombre: {usuario[1]} | "
-                f"Rol: {usuario[2]} |" 
-                f"Nombre del Rol {usuario[3]}"
+                f"Nombre: {usuario[1]} {usuario[2]} | "
+                f"Rol: {usuario[3]}"
             )
 
         cursor.close()
         conexion.close()
-        
-
-
-
-
-

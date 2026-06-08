@@ -326,13 +326,28 @@ CREATE TABLE IF NOT EXISTS `adopcionMascotas`.`solicitudes_adopciones` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- MySQL Script estructurado estilo MySQL Workbench
+-- Model: Adopción de Mascotas v2.2 (Contraseñas en texto plano para pruebas)
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+CREATE SCHEMA IF NOT EXISTS `adopcionMascotas` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `adopcionMascotas`;
+
+-- (Todas las tablas se mantienen igual que en la versión anterior, 
+-- solo se muestra la inserción de datos modificada para ahorrar espacio, 
+-- pero puedes ejecutar el CREATE TABLE completo de la respuesta anterior).
+
+-- ... [Aquí van todos los CREATE TABLE de la versión anterior] ...
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
-
 -- =====================================================
--- INSERCIÓN DE DATOS DE PRUEBA
+-- INSERCIÓN DE DATOS DE PRUEBA (Contraseñas en texto plano)
 -- =====================================================
 USE `adopcionMascotas`;
 
@@ -346,16 +361,16 @@ INSERT INTO razas (nombre_raza, id_tipo_raza) VALUES
 ('Bull Dog Francés', 1),
 ('Labrador', 1),
 ('Siamés', 2),
-('Angora', 3);
+('Angora', 2);
 
 INSERT INTO sexos_mascotas (tipo_sexo_mascota) VALUES
-('Masculino'),
-('Femenino');
+('Macho'),
+('Hembra');
 
-INSERT INTO mascotas (nombre_mascota, id_raza, id_sexo_mascota) VALUES
-('Cholito', 1, 2),
-('Luna', 2, 2),
-('Kira', 3, 2);
+INSERT INTO mascotas (nombre_mascota, id_raza, id_sexo_mascota, fecha_nacimiento) VALUES
+('Cholito', 1, 1, '2020-05-10'),
+('Luna', 2, 2, '2021-08-15'),
+('Kira', 3, 2, '2019-02-20');
 
 INSERT INTO regiones (nombre_region) VALUES
 ('Región de Coquimbo'),
@@ -375,15 +390,15 @@ INSERT INTO direcciones (calle, numero, departamento, id_comuna) VALUES
 ('Av. Providencia', '890', NULL, 3),
 ('Calle 1 Sur', '321', 'Depto 5', 4);
 
-INSERT INTO personas (RUT, nombre, apellido, telefono, fecha_nacimiento) VALUES
-('20245645-4', 'Daniel', 'Carranza', '956782345', '2000-04-08'),
-('22245645-4', 'Benjamin', 'Cortinez', '956742335', '2001-06-06'),
-('21245645-4', 'Akon', 'Bustamante', '956782355', '2004-05-02'),
-('19245645-4', 'Martin', 'Correa', '946782345', '2000-08-05');
+INSERT INTO personas (RUT, nombre, apellido, email, telefono, fecha_nacimiento) VALUES
+('20245645-4', 'Daniel', 'Carranza', 'daniel.carranza@email.com', '+56 9 5678 2345', '2000-04-08'),
+('22245645-4', 'Benjamin', 'Cortinez', 'benjamin.cortinez@email.com', '+56 9 5674 2335', '2001-06-06'),
+('21245645-4', 'Akon', 'Bustamante', 'akon.bustamante@email.com', '+56 9 5678 2355', '2004-05-02'),
+('19245645-4', 'Martin', 'Correa', 'martin.correa@email.com', '+56 9 4678 2345', '2000-08-05');
 
 INSERT INTO empleados (id_persona, id_direccion, cargo) VALUES
-(1, 2, 'Veterinario'),
-(2, 1, 'Administrativo');
+(1, 2, 'Veterinario Jefe'),
+(2, 1, 'Administrativo de Adopciones');
 
 INSERT INTO adoptantes (id_persona, id_direccion) VALUES
 (3, 3),
@@ -394,24 +409,27 @@ INSERT INTO tipos_usuarios (nombre_tipo) VALUES
 ('Empleado'),
 ('Adoptante');
 
-INSERT INTO usuarios (username, id_persona, id_tipo_usuario) VALUES
-('daniel.carranza', 1, 1),
-('benjamin.cortinez', 2, 2),
-('akon.bustamante', 3, 3),
-('martin.correa', 4, 3);
+-- MEJORA PARA PRUEBAS: Contraseñas en texto plano (ej: '123456')
+INSERT INTO usuarios (username, password_hash, id_persona, id_tipo_usuario) VALUES
+('daniel.carranza', '123456', 1, 1),
+('benjamin.cortinez', '123456', 2, 2),
+('akon.bustamante', '123456', 3, 3),
+('martin.correa', '123456', 4, 3);
 
 INSERT INTO tipos_estados (nombre_tipo, descripcion_tipo) VALUES
-('Solicitud', 'Estados relacionados al proceso de solicitud'),
-('Mascota', 'Estados relacionados a la mascota');
+('Solicitud', 'Estados relacionados al proceso de solicitud de adopción'),
+('Mascota', 'Estados relacionados a la disponibilidad de la mascota');
 
 INSERT INTO estados (nombre_estado, id_tipo_estado) VALUES
 ('Pendiente', 1),
+('En Revisión', 1),
 ('Aprobada', 1),
 ('Rechazada', 1),
 ('Disponible', 2),
-('Adoptada', 2);
+('Adoptada', 2),
+('En Tratamiento', 2);
 
-INSERT INTO solicitudes_adopciones (id_mascota, id_adoptante, id_empleado, id_estado, fecha_solicitud) VALUES
-(1, 1, 1, 1, '2024-01-15'),
-(2, 2, 2, 2, '2024-02-20'),
-(3, 1, 1, 3, '2024-03-10');
+INSERT INTO solicitudes_adopciones (id_mascota, id_adoptante, id_empleado, id_estado, fecha_solicitud, observaciones) VALUES
+(1, 1, NULL, 1, '2024-01-15', 'Solicitud recién creada, pendiente de asignación a un empleado.'),
+(2, 2, 2, 3, '2024-02-20', 'Solicitud aprobada. Se coordinó visita domiciliaria.'),
+(3, 1, 1, 4, '2024-03-10', 'Rechazada: El adoptante no cuenta con el espacio mínimo requerido para la raza.');

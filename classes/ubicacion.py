@@ -1,53 +1,49 @@
-# CRUD
 from conexion import Conexion
 
-
 class Ubicaciones:
-    def __init__(self, departamento, comuna, calle, numero):
-        self.departamento = departamento
+    def __init__(self, comuna, calle, numero, departamento=None):
         self.comuna = comuna
         self.calle = calle
         self.numero = numero
+        self.departamento = departamento
         
-    
-    def direccion(self):
-
+    def guardar(self):
         conexion = Conexion.conexion()
         cursor = conexion.cursor()
 
         sql = """
-            insert into direciones
-            (
-                id_comuna,
-                calle,
-                numero,
-                departamento
-            )
-            values (
-                %s,
-                %s,
-                %s,
-                %s
-            )
-            """
+            INSERT INTO direcciones (calle, numero, departamento, id_comuna)
+            SELECT %s, %s, %s, id_comuna 
+            FROM comunas 
+            WHERE nombre_comuna = %s
+        """
+        valores = (self.calle, self.numero, self.departamento, self.comuna)
         
-        valores = (
-            self.departamento,
-            self.comuna,
-            self.calle,
-            self.numero
-        )
-
-
         cursor.execute(sql, valores)
-
-        cursor.commit()
+        conexion.commit()
         print("\nUbicación guardada\n")
+        
         cursor.close()
         conexion.close()
 
-        @staticmethod
-        def mostrarUbicacion():
-            pass
+    @staticmethod
+    def mostrarUbicaciones():
+        conexion = Conexion.conexion()
+        cursor = conexion.cursor()
 
+        sql = """
+            SELECT d.calle, d.numero, d.departamento, c.nombre_comuna
+            FROM direcciones d
+            INNER JOIN comunas c ON d.id_comuna = c.id_comuna
+            WHERE d.deleted = 0 and c.deleted = 0;
+        """
 
+        cursor.execute(sql)
+        direcciones = cursor.fetchall()
+        
+        print("\n===== Ubicaciones Registradas =====\n")
+        for dir in direcciones:
+            print(f"Calle: {dir[0]} {dir[1]} | Depto: {dir[2]} | Comuna: {dir[3]}")
+
+        cursor.close()
+        conexion.close()
