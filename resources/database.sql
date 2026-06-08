@@ -64,8 +64,10 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `adopcionMascotas`.`mascotas` (
   `id_mascota` INT NOT NULL AUTO_INCREMENT,
   `nombre_mascota` VARCHAR(100) NULL,
+  `edad` INT NULL,
   `id_raza` INT NOT NULL,
   `id_sexo_mascota` INT NOT NULL,
+  `id_usuario` INT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` INT NULL,
@@ -148,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `adopcionMascotas`.`personas` (
   `RUT` VARCHAR(20) NULL,
   `nombre` VARCHAR(50) NOT NULL,
   `apellido` VARCHAR(50) NOT NULL,
-  `telefono` VARCHAR(10) NOT NULL,
+  `telefono` VARCHAR(15) NOT NULL,
   `fecha_nacimiento` DATE NOT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -229,6 +231,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `adopcionMascotas`.`usuarios` (
   `id_usuario` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(50) NULL,
+  `password_hash` VARCHAR(255) NULL, 
   `email` VARCHAR(100) NOT NULL,
   `id_persona` INT NOT NULL,
   `id_tipo_usuario` INT NOT NULL,

@@ -1,5 +1,5 @@
 from conexion import Conexion
-from ubicacion import Ubicaciones
+from classes.ubicacion import Ubicaciones
 
 class Usuarios:
 
@@ -35,26 +35,12 @@ class Usuarios:
         )
 
         cursor.execute(sql_persona, valores_persona)
-        
         id_persona_generado = cursor.lastrowid
 
         sql_usuario = """
             INSERT INTO usuarios 
-            (
-                username, 
-                password_hash,
-                email, 
-                id_persona, 
-                id_tipo_usuario
-            )
-            VALUES 
-            (
-                %s, 
-                %s, 
-                %s,
-                %s, 
-                %s
-            )
+            (username, password_hash, email, id_persona, id_tipo_usuario)
+            VALUES (%s, %s, %s, %s, %s)
         """
         valores_usuario = (
             self.username,
@@ -65,7 +51,6 @@ class Usuarios:
         )
 
         cursor.execute(sql_usuario, valores_usuario)
-
         conexion.commit()
         print("\nUsuario y persona ingresado correctamente!\n")
         
@@ -82,11 +67,18 @@ class Usuarios:
                 u.username,
                 p.nombre,
                 p.apellido,
-                t.nombre_tipo
+                t.nombre_tipo,
+                d.calle,
+                d.numero,
+                c.nombre_comuna
             FROM usuarios u
             INNER JOIN tipos_usuarios t ON u.id_tipo_usuario = t.id_tipo_usuario
             INNER JOIN personas p ON u.id_persona = p.id_persona
-            WHERE u.deleted = 0 AND t.deleted = 0 AND p.deleted = 0;
+            LEFT JOIN empleados e ON p.id_persona = e.id_persona
+            LEFT JOIN adoptantes ad ON p.id_persona = ad.id_persona
+            LEFT JOIN direcciones d ON COALESCE(e.id_direccion, ad.id_direccion) = d.id_direccion
+            LEFT JOIN comunas c ON d.id_comuna = c.id_comuna
+            WHERE u.deleted = 0 AND t.deleted = 0 AND p.deleted = 0
         """
 
         cursor.execute(sql)
@@ -94,10 +86,12 @@ class Usuarios:
         
         print("\n===== Usuarios Activos =====\n")
         for usuario in usuarios:
+            direccion = f"{usuario[4]} {usuario[5]}, {usuario[6]}" if usuario[4] else "Sin dirección"
             print(
                 f"Username: {usuario[0]} | "
                 f"Nombre: {usuario[1]} {usuario[2]} | "
-                f"Rol: {usuario[3]}"
+                f"Rol: {usuario[3]} | "
+                f"Dirección: {direccion}"
             )
 
         cursor.close()
@@ -114,10 +108,10 @@ class Usuarios:
         opcion = input("Seleccione una opción: ")
 
         opciones = {
-            "1": ("nombre",    "personas"),
-            "2": ("apellido",  "personas"),
-            "3": ("telefono",  "personas"),
-            "4": ("email",     "usuarios"),
+            "1": ("nombre",   "personas"),
+            "2": ("apellido", "personas"),
+            "3": ("telefono", "personas"),
+            "4": ("email",    "usuarios"),
         }
 
         if opcion not in opciones:
@@ -160,7 +154,6 @@ class Usuarios:
 
         cursor.execute(sql, (id_usuario,))
         conexion.commit()
-
         print("\nUsuario eliminado correctamente.")
 
         cursor.close()

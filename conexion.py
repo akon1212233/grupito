@@ -2,11 +2,11 @@ import mysql.connector
 
 class Conexion:
     @staticmethod
-    def conectar():    
+    def conexion():    
         conexion = mysql.connector.connect(
             host = "localhost",
             user = "root",
-            password = "1234",
+            password = "root",
             database = "adopcionMascotas",
         )
         return conexion

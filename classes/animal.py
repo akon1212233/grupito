@@ -1,5 +1,5 @@
 from conexion import Conexion
-from usuario import Usuarios
+from classes.usuario import Usuarios
 
 class Animales:
     def __init__(self, raza: str, dueño: Usuarios, edad: int, nombreAnimal: str, genero: str):
@@ -14,15 +14,14 @@ class Animales:
         cursor = conexion.cursor()
 
         sql = """
-            INSERT INTO mascotas (nombre, edad, id_raza, id_genero, id_usuario)
-            SELECT %s, %s,
+            INSERT INTO mascotas (nombre_mascota, id_raza, id_sexo_mascota, id_usuario)
+            SELECT %s,
                 (SELECT id_raza FROM razas WHERE nombre_raza = %s),
-                (SELECT id_genero FROM generos_animal WHERE nombre_genero = %s),
+                (SELECT id_sexo_mascota FROM sexos_mascotas WHERE tipo_sexo_mascota = %s),
                 %s
         """
         valores = (
             self.nombreAnimal,
-            self.edad,
             self.raza,
             self.genero,
             self.dueño
@@ -42,15 +41,18 @@ class Animales:
 
         sql = """
             SELECT
-                m.nombre,
-                m.edad,
+                m.nombre_mascota,
                 r.nombre_raza,
-                g.nombre_genero,
-                u.username
+                s.tipo_sexo_mascota,
+                p.nombre,
+                p.apellido
             FROM mascotas m
             INNER JOIN razas r ON m.id_raza = r.id_raza
-            INNER JOIN generos_animal g ON m.id_genero = g.id_genero
-            INNER JOIN usuarios u ON m.id_usuario = u.id_usuario
+            INNER JOIN sexos_mascotas s ON m.id_sexo_mascota = s.id_sexo_mascota
+            LEFT JOIN solicitudes_adopciones sa ON m.id_mascota = sa.id_mascota
+                AND sa.id_estado = (SELECT id_estado FROM estados WHERE nombre_estado = 'Aprobada')
+            LEFT JOIN adoptantes a ON sa.id_adoptante = a.id_adoptante
+            LEFT JOIN personas p ON a.id_persona = p.id_persona
             WHERE m.deleted = 0
         """
 
@@ -59,12 +61,12 @@ class Animales:
 
         print("\n===== Animales Registrados =====\n")
         for animal in animales:
+            dueño = f"{animal[3]} {animal[4]}" if animal[3] else "Sin adoptante"
             print(
                 f"Nombre: {animal[0]} | "
-                f"Edad: {animal[1]} | "
-                f"Raza: {animal[2]} | "
-                f"Género: {animal[3]} | "
-                f"Dueño: {animal[4]}"
+                f"Raza: {animal[1]} | "
+                f"Sexo: {animal[2]} | "
+                f"Adoptante: {dueño}"
             )
 
         cursor.close()
@@ -75,22 +77,19 @@ class Animales:
 
         print("\n¿Qué desea modificar?")
         print("1. Nombre")
-        print("2. Edad")
         opcion = input("Seleccione una opción: ")
 
-        campos = {"1": "nombre", "2": "edad"}
+        campos = {"1": "nombre_mascota"}
 
         if opcion not in campos:
-                print("Opción no válida.")
-                return
+            print("Opción no válida.")
+            return
 
         campo = campos[opcion]
         nuevo_valor = input(f"Ingrese el nuevo {campo}: ").strip()
 
-        if campo == "nombre":
-                self.nombreAnimal = nuevo_valor
-        elif campo == "edad":
-                self.edad = nuevo_valor
+        if campo == "nombre_mascota":
+            self.nombreAnimal = nuevo_valor
 
         conexion = Conexion.conexion()
         cursor = conexion.cursor()
