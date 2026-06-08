@@ -24,7 +24,7 @@ class Usuarios:
 
         sql_persona = """
             INSERT INTO personas (RUT, nombre, apellido, telefono, fecha_nacimiento)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s)
         """
         valores_persona = (
             self.rut,
@@ -103,4 +103,48 @@ class Usuarios:
         cursor.close()
         conexion.close()
 
-        
+    def actualizar(self):
+        id_persona = input("Ingrese ID de la persona que quiere modificar: ")
+
+        print("\n¿Qué desea modificar?")
+        print("1. Nombre")
+        print("2. Apellido")
+        print("3. Teléfono")
+        print("4. Email")
+        opcion = input("Seleccione una opción: ")
+
+        opciones = {
+            "1": ("nombre",   "personas"),
+            "2": ("apellido", "personas"),
+            "3": ("telefono", "personas"),
+            "4": ("email",    "usuarios"),
+        }
+
+        if opcion not in opciones:
+            print("Opción no válida.")
+            return
+
+        campo, tabla = opciones[opcion]
+        nuevo_valor = input(f"Ingrese el nuevo {campo}: ").strip()
+
+        if not nuevo_valor:
+            print("El valor no puede estar vacío.")
+            return
+
+        setattr(self, campo, nuevo_valor)
+
+        conexion = Conexion.conexion()
+        cursor = conexion.cursor()
+
+        sql = f"UPDATE {tabla} SET {campo} = %s WHERE id_persona = %s"
+        cursor.execute(sql, (nuevo_valor, id_persona))
+
+        conexion.commit()
+        print(f"\n{campo.capitalize()} actualizado correctamente.")
+
+        cursor.close()
+        conexion.close()
+
+
+    def eliminarUsuario():
+        pass

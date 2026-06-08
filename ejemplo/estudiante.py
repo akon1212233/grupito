@@ -221,3 +221,22 @@ class Estudiante:
 
         cursor.close()
         conexion.close()
+
+    def eliminar(self):
+        id_usuario = input("Ingrese ID del usuario: ")
+        conexion = Conexion.conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+        UPDATE usuarios
+        SET deleted = 1
+        WHERE id_usuario = %s
+        """
+
+        cursor.execute(sql, (id_usuario,))
+        conexion.commit()
+
+        print("\nUsuario eliminado correctamente.")
+
+        cursor.close()
+        conexion.close()

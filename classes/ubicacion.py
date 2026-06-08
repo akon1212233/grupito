@@ -47,3 +47,46 @@ class Ubicaciones:
 
         cursor.close()
         conexion.close()
+
+    def actualizar(self):
+        id_direccion = input("Ingrese ID de la dirección a modificar: ")
+
+        print("\n¿Qué desea modificar?")
+        print("1. Calle")
+        print("2. Número")
+        print("3. Departamento")
+        opcion = input("Seleccione una opción: ")
+
+        campos = {"1": "calle", "2": "numero", "3": "departamento"}
+
+        if opcion not in campos:
+            print("Opción no válida.")
+            return
+
+        campo = campos[opcion]
+        nuevo_valor = input(f"Ingrese el nuevo {campo}: ").strip()
+
+        conexion = Conexion.conexion()
+        cursor = conexion.cursor()
+
+        sql = f"UPDATE direcciones SET {campo} = %s WHERE id_direccion = %s"
+        cursor.execute(sql, (nuevo_valor, id_direccion))
+        conexion.commit()
+        print("\nUbicación actualizada correctamente.")
+
+        cursor.close()
+        conexion.close()
+
+    def eliminar(self):
+        id_direccion = input("Ingrese ID de la dirección: ")
+        conexion = Conexion.conexion()
+        cursor = conexion.cursor()
+
+        sql = "UPDATE direcciones SET deleted = 1 WHERE id_direccion = %s"
+
+        cursor.execute(sql, (id_direccion,))
+        conexion.commit()
+        print("\nUbicación eliminada correctamente.")
+
+        cursor.close()
+        conexion.close()
