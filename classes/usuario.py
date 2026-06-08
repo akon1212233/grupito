@@ -4,8 +4,9 @@ from ubicacion import Ubicaciones
 class Usuarios:
 
     def __init__(self, tipoUsuario: int, username: str, nombre: str, apellido: str, 
-                 email: str, contraseña: str, rut: str, telefono: str, nacimiento: str, 
-                 ubicacion: Ubicaciones = None):
+                email: str, contraseña: str, rut: str, telefono: str, nacimiento: str, 
+                ubicacion: Ubicaciones = None):
+        
         self.nombre = nombre
         self.apellido = apellido
         self.email = email
@@ -22,14 +23,13 @@ class Usuarios:
         cursor = conexion.cursor()
 
         sql_persona = """
-            INSERT INTO personas (RUT, nombre, apellido, email, telefono, fecha_nacimiento)
+            INSERT INTO personas (RUT, nombre, apellido, telefono, fecha_nacimiento)
             VALUES (%s, %s, %s, %s, %s, %s)
         """
         valores_persona = (
             self.rut,
             self.nombre,
             self.apellido,
-            self.email,
             self.telefono,
             self.nacimiento
         )
@@ -42,7 +42,8 @@ class Usuarios:
             INSERT INTO usuarios 
             (
                 username, 
-                password_hash, 
+                password_hash,
+                email, 
                 id_persona, 
                 id_tipo_usuario
             )
@@ -50,6 +51,7 @@ class Usuarios:
             (
                 %s, 
                 %s, 
+                %s,
                 %s, 
                 %s
             )
@@ -57,6 +59,7 @@ class Usuarios:
         valores_usuario = (
             self.username,
             self.contraseña,
+            self.email,
             id_persona_generado,
             self.tipoUsuario
         )
@@ -99,3 +102,5 @@ class Usuarios:
 
         cursor.close()
         conexion.close()
+
+        

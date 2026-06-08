@@ -229,6 +229,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `adopcionMascotas`.`usuarios` (
   `id_usuario` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(50) NULL,
+  `email` VARCHAR(100) NOT NULL,
   `id_persona` INT NOT NULL,
   `id_tipo_usuario` INT NOT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -326,8 +327,6 @@ CREATE TABLE IF NOT EXISTS `adopcionMascotas`.`solicitudes_adopciones` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
--- MySQL Script estructurado estilo MySQL Workbench
--- Model: Adopción de Mascotas v2.2 (Contraseñas en texto plano para pruebas)
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -336,18 +335,13 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 CREATE SCHEMA IF NOT EXISTS `adopcionMascotas` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `adopcionMascotas`;
 
--- (Todas las tablas se mantienen igual que en la versión anterior, 
--- solo se muestra la inserción de datos modificada para ahorrar espacio, 
--- pero puedes ejecutar el CREATE TABLE completo de la respuesta anterior).
-
--- ... [Aquí van todos los CREATE TABLE de la versión anterior] ...
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- =====================================================
--- INSERCIÓN DE DATOS DE PRUEBA (Contraseñas en texto plano)
+-- INSERCIÓN DE DATOS DE PRUEBA 
 -- =====================================================
 USE `adopcionMascotas`;
 
