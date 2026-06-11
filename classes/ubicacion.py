@@ -78,7 +78,7 @@ class Ubicaciones:
         conexion.close()
 
     def eliminar(self):
-        id_direccion = input("Ingrese ID de la dirección: ")
+        id_direccion = input("Ingrese ID de la dirección que quiere eliminar: ")
         conexion = Conexion.conexion()
         cursor = conexion.cursor()
 

@@ -52,7 +52,7 @@ while continuar:
                 nombreAnimal    = input("Nombre del animal: ")
                 verRazas()
                 raza            = int(input("ID de la raza: "))
-                genero          = input("Sexo (Macho/Hembra): ")
+                genero          = input("Sexo (Macho/Hembra): ").lower
                 fechaNacimiento = input("Fecha de nacimiento (YYYY-MM-DD): ")
                 verUsuarios()
                 dueño           = int(input("ID del usuario dueño: "))
