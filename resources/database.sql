@@ -1,3 +1,4 @@
+-- drop database adopcionMascotas;
 -- MySQL Script estructurado estilo MySQL Workbench
 -- Model: Adopción de Mascotas v1.0
 
@@ -68,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `adopcionMascotas`.`mascotas` (
   `id_raza` INT NOT NULL,
   `id_sexo_mascota` INT NOT NULL,
   `id_usuario` INT NULL,
+  `fecha_nacimiento` date not null,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` INT NULL,
@@ -299,6 +301,7 @@ CREATE TABLE IF NOT EXISTS `adopcionMascotas`.`solicitudes_adopciones` (
   `id_empleado` INT NOT NULL,
   `id_estado` INT NOT NULL,
   `fecha_solicitud` DATE NULL,
+  `observaciones` varchar(200) not null,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` INT NULL,
@@ -427,6 +430,6 @@ INSERT INTO estados (nombre_estado, id_tipo_estado) VALUES
 ('En Tratamiento', 2);
 
 INSERT INTO solicitudes_adopciones (id_mascota, id_adoptante, id_empleado, id_estado, fecha_solicitud, observaciones) VALUES
-(1, 1, NULL, 1, '2024-01-15', 'Solicitud recién creada, pendiente de asignación a un empleado.'),
+(1, 1, 3, 1, '2024-01-15', 'Solicitud recién creada, pendiente de asignación a un empleado.'),
 (2, 2, 2, 3, '2024-02-20', 'Solicitud aprobada. Se coordinó visita domiciliaria.'),
 (3, 1, 1, 4, '2024-03-10', 'Rechazada: El adoptante no cuenta con el espacio mínimo requerido para la raza.');

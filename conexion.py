@@ -6,7 +6,7 @@ class Conexion:
         conexion = mysql.connector.connect(
             host = "localhost",
             user = "root",
-            password = "1234",
+            password = "123",
             database = "adopcionMascotas",
         )
         return conexion
